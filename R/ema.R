@@ -10,6 +10,9 @@
 #' @param ID a vector contain all the IDs for each measurement in x.
 #' @param x a vector contain all the measurements for all the subjects.
 #'
+#' @return a n*6 matrix, where n is the number of subject. In each row, the 6 elements are: ID,
+#' mean, variance, autocorrelation, \eqn{\lambda_o} and \eqn{\lambda_s}.
+#'
 #' @examples
 #' ID = rep(seq(1:10), each = 8)
 #' x = rnorm(80)
@@ -24,7 +27,7 @@ summarize_EMA_data = function(ID, x)
   lambda_o = tapply(x, INDEX = ID, get_lambda_o)
   lambda_s = tapply(x, INDEX = ID, get_lambda_s)
   atcor = tapply(x, INDEX = ID, autocorrelation)
-  data.frame(ID = names(m1), mean=m1, variance=v1, atcor, lambda_o, lambda_s)
+  data.frame(ID = names(m1), mean=m1, variance=v1, autocorrelation = atcor, lambda_o, lambda_s)
 }
 
 
