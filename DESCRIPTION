@@ -4,7 +4,7 @@ Title: What the Package Does (Title Case)
 Version: 0.1.0
 Author: Zhanrui Cai
 Maintainer: Zhanrui Cai <zxc55@psu.edu>
-Description: This function calculates the summary variables for the EMA data.
+Description: This R package calculates the summary variables for the EMA data.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
