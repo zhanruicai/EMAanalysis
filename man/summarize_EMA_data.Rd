@@ -11,6 +11,10 @@ summarize_EMA_data(ID, x)
 
 \item{x}{a vector contain all the measurements for all the subjects.}
 }
+\value{
+Matrix of dimension n*6, where n is the number of subject. The six columns are: ID,
+mean, variance, autocorrelation, \eqn{\lambda_o} and \eqn{\lambda_s}, respectively.
+}
 \description{
 This function returns the summary of the EMA variable, which include the mean, variance, autocorrelation,
 \eqn{\lambda_o} and \eqn{\lambda_s} for each subject. The function will return a n*6 matrix, where n is the

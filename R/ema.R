@@ -6,12 +6,11 @@
 #' \eqn{\lambda_o} and \eqn{\lambda_s} for each subject. The function will return a n*6 matrix, where n is the
 #' number of subjects. In each row, we record the subject's ID, and his/her five summary variables listed above.
 #'
-#' @export
 #' @param ID a vector contain all the IDs for each measurement in x.
 #' @param x a vector contain all the measurements for all the subjects.
 #'
-#' @return a n*6 matrix, where n is the number of subject. In each row, the 6 elements are: ID,
-#' mean, variance, autocorrelation, \eqn{\lambda_o} and \eqn{\lambda_s}.
+#' @return Matrix of dimension n*6, where n is the number of subject. The six columns are: ID,
+#' mean, variance, autocorrelation, \eqn{\lambda_o} and \eqn{\lambda_s}, respectively.
 #'
 #' @examples
 #' ID = rep(seq(1:10), each = 8)
@@ -20,17 +19,18 @@
 #'
 #' @references
 #' \insertRef{buu2020association}{EMAanalysis}
+#'
+#' @export
 summarize_EMA_data = function(ID, x)
 {
-  m1 = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(0) else return(mean(aa, na.rm = T))})
-  v1 = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(0) else return(var(aa, na.rm = T))})
-  lambda_o = tapply(x, INDEX = ID, get_lambda_o)
-  lambda_s = tapply(x, INDEX = ID, get_lambda_s)
-  atcor = tapply(x, INDEX = ID, autocorrelation)
+  m1 = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<1) return(0) else return(mean(aa, na.rm = T))})
+  v1 = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(NA) else return(var(aa, na.rm = T))})
+  lambda_o = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(NA) else return(get_lambda_o(aa))})
+
+  lambda_s = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(NA) else return(get_lambda_s(aa))})
+  atcor = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(NA) else return(autocorrelation(aa))})
   data.frame(ID = names(m1), mean=m1, variance=v1, autocorrelation = atcor, lambda_o, lambda_s)
 }
-
-
 
 
 #' Calculate the first order auto-correlation
