@@ -23,7 +23,7 @@
 #' @export
 summarize_EMA_data = function(ID, x)
 {
-  m1 = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<1) return(0) else return(mean(aa, na.rm = T))})
+  m1 = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<1) return(NA) else return(mean(aa, na.rm = T))})
   v1 = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(NA) else return(var(aa, na.rm = T))})
   lambda_o = tapply(x, INDEX = ID, function(aa){if(length(na.omit(aa))<=1) return(NA) else return(get_lambda_o(aa))})
 
@@ -50,9 +50,9 @@ summarize_EMA_data = function(ID, x)
 autocorrelation = function(x)
 {
   x = na.omit(x)
-  if(length(x)<=1) return(0)
+  if(length(x)<=1) return(NA)
   xbar = mean(x)
-  if(sum((x-xbar)^2)==0) return(0)
+  if(sum((x-xbar)^2)==0) return(NA)
   a1 = x[-1]
   a2 = x[-length(x)]
   return(sum((a1-xbar)*(a2-xbar))/sum((x-xbar)^2))
@@ -79,16 +79,13 @@ autocorrelation = function(x)
 get_lambda_o = function(x)
 {
   x = na.omit(x)
-  if(length(x)<=1) return(0)
+  if(length(x)<=1) return(NA)
+  if(sd(x)==0) return(0)
   x = x-mean(x)
-  a1 = abs(x)>sd(x)
+  a1 = abs(x)>=sd(x)
   if(sum(a1)==0) return(0)
   l1 = length(x)
-  if(a1[l1]==0){
-    n0 = sum(a1[2:l1]-a1[1:(l1-1)]<0)
-  }else{
-    n0 = sum(a1[2:l1]-a1[1:(l1-1)]<0)+1
-  }
+  n0 = sum(a1[2:l1]-a1[1:(l1-1)]<0)
   n0/sum(a1)
 }
 
@@ -118,11 +115,7 @@ get_lambda_s = function(x)
   a1 = abs(x)<=sd(x)
   if(sum(a1)==0) return(0)
   l1 = length(x)
-  if(a1[l1]==0){
-    ns = sum(a1[2:l1]-a1[1:(l1-1)]<0)
-  }else{
-    ns = sum(a1[2:l1]-a1[1:(l1-1)]<0)+1
-  }
+  ns = sum(a1[2:l1]-a1[1:(l1-1)]<0)
   ns/sum(a1)
 }
 
